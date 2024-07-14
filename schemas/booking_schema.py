@@ -1,5 +1,4 @@
-from marshmallow import Schema,fields
-from schemas import PlainCustomerSchema
+from marshmallow import Schema, fields
 
 class PlainBookingSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -22,7 +21,11 @@ class BookingSchemaUpdate(Schema):
     carReg = fields.Str()
     carModel = fields.Str()
     customer_id = fields.Int()
-    
+
 class BookingSchema(PlainBookingSchema):
-    customer_id = fields.Int(required=True,load_only=True)
-    customer = fields.Nested(PlainCustomerSchema(),dump_only=True)
+    customer_id = fields.Int(required=True, load_only=True)
+    customer = fields.Method("get_customer", dump_only=True)
+
+    def get_customer(self, obj):
+        from schemas.customer_schema import PlainCustomerSchema
+        return PlainCustomerSchema().dump(obj.customer)

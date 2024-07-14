@@ -1,6 +1,6 @@
-from schemas.booking_schema import PlainBookingSchema
-from schemas.customer_schema import PlainCustomerSchema
-from schemas.employee_schema import PlainEmployeeSchema
-from schemas.invoice_schema import PlainInvoiceSchema
-from schemas.tasks_schema import PlainTaskDoneSchema,PlainNewTaskSchema
-from schemas.cashier_schema import PlainCashierSchema
+from schemas.booking_schema import PlainBookingSchema, BookingSchemaUpdate, BookingSchema
+from schemas.customer_schema import PlainCustomerSchema, CustomerUpdateSchema, CustomerSchema
+from schemas.employee_schema import PlainEmployeeSchema, EmployeeUpdateSchema, EmployeeSchema
+from schemas.invoice_schema import PlainInvoiceSchema, InvoiceUpdateSchema, InvoiceSchema
+from schemas.tasks_schema import PlainTaskDoneSchema, PlainNewTaskSchema, TaskDoneUpdateSchema, TaskDoneSchema, NewTaskUpdateSchema, NewTaskSchema
+from schemas.cashier_schema import PlainCashierSchema, CashierUpdateSchema, CashierSchema

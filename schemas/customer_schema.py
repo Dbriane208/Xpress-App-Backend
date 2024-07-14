@@ -1,5 +1,4 @@
-from marshmallow import fields,Schema
-from schemas import PlainBookingSchema,PlainInvoiceSchema
+from marshmallow import fields, Schema
 
 class PlainCustomerSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -15,6 +14,8 @@ class CustomerUpdateSchema(Schema):
     password = fields.Str()
 
 class CustomerSchema(PlainCustomerSchema):
-    bookings = fields.List(fields.Nested(PlainBookingSchema(),dump_only=True)) 
-    invoice = fields.Nested(PlainInvoiceSchema(),dump_only=True)  
-    
+    bookings = fields.Method("get_bookings", dump_only=True)
+
+    def get_bookings(self, obj):
+        from schemas.booking_schema import PlainBookingSchema
+        return PlainBookingSchema(many=True).dump(obj.bookings)
