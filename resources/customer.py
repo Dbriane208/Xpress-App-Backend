@@ -35,7 +35,6 @@ class Customer(MethodView):
 
         return customer 
 
-    
 @blp.route("/customer")
 class CustomerList(MethodView):
     @blp.response(200,CustomerSchema(many=True))    

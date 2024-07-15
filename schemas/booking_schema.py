@@ -29,3 +29,4 @@ class BookingSchema(PlainBookingSchema):
     def get_customer(self, obj):
         from schemas.customer_schema import PlainCustomerSchema
         return PlainCustomerSchema().dump(obj.customer)
+
