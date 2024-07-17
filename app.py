@@ -7,10 +7,13 @@ import models
 
 from resources.customer import blp as CustomerBluePrint
 from resources.booking import blp as BookingBluePrint
+from resources.donetask import blp as DoneTaskBluePrint
 # from resources.cashier import blp as CashierBluePrint
-# from resources.employee import blp as EmployeeBluePrint
+from resources.employee import blp as EmployeeBluePrint
 # from resources.invoice import blp as InvoiceBluePrint
-# from resources.tasks import blp as TasksBlueprint
+ 
+
+
 
 def create_app(db_url=None):
     app = Flask(__name__)
@@ -32,10 +35,11 @@ def create_app(db_url=None):
 
     api.register_blueprint(CustomerBluePrint)
     api.register_blueprint(BookingBluePrint)
+    api.register_blueprint(DoneTaskBluePrint)
     # api.register_blueprint(CashierBluePrint)
-    # api.register_blueprint(EmployeeBluePrint)  
+    api.register_blueprint(EmployeeBluePrint)  
     # api.register_blueprint(InvoiceBluePrint)  
-    # api.register_blueprint(TasksBlueprint)  
-
+   
+   
 
     return app

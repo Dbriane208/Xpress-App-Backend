@@ -1,5 +1,4 @@
 from db import db
-from sqlalchemy import Time,Date
 
 class BookingModel(db.Model):
     __tablename__ = "bookings"

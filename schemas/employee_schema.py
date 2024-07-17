@@ -1,4 +1,5 @@
 from marshmallow import fields, Schema
+from schemas.donetask_schema import TaskDoneSchema
 
 class PlainEmployeeSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -7,16 +8,9 @@ class PlainEmployeeSchema(Schema):
     password = fields.Str(required=True)
 
 class EmployeeUpdateSchema(Schema):
+    name = fields.Str()
+    email = fields.Str()
     password = fields.Str()
 
 class EmployeeSchema(PlainEmployeeSchema):
-    assigned_tasks = fields.Method("get_assigned_tasks", dump_only=True)
-    completed_tasks = fields.Method("get_completed_tasks", dump_only=True)
-
-    def get_assigned_tasks(self, obj):
-        from schemas.tasks_schema import PlainNewTaskSchema
-        return PlainNewTaskSchema(many=True).dump(obj.assigned_tasks)
-
-    def get_completed_tasks(self, obj):
-        from schemas.tasks_schema import PlainTaskDoneSchema
-        return PlainTaskDoneSchema(many=True).dump(obj.completed_tasks)
+    donetasks = fields.List(fields.Nested(TaskDoneSchema(),dump_only=True))
