@@ -11,3 +11,4 @@ class DoneTaskModel(db.Model):
     employee_id = db.Column(db.Integer,db.ForeignKey("employees.id"),unique=False,nullable=False)
 
     employee = db.relationship("EmployeeModel",back_populates="donetasks")
+    

@@ -9,4 +9,4 @@ class NewTaskModel(db.Model):
     serviceDone = db.Column(db.String(80),unique=False,nullable=False)
     employee_id = db.Column(db.Integer,db.ForeignKey("employees.id"),unique=False,nullable=False)
 
-    employee = db.relationship("EmployeeModel",back_populates="newtask")
+    employee = db.relationship("EmployeeModel",back_populates="newtasks")
