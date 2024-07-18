@@ -9,4 +9,4 @@ class EmployeeModel(db.Model):
     password = db.Column(db.String(50),unique=False,nullable=False)
 
     donetasks = db.relationship("DoneTaskModel",back_populates="employee",lazy="dynamic",cascade="all, delete")
-    # newtask = db.relationship("NewTaskModel", back_populates="employee", lazy="dynamic", cascade="all, delete")
+    newtask = db.relationship("NewTaskModel", back_populates="employee", lazy="dynamic", cascade="all, delete")

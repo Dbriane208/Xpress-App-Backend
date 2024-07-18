@@ -4,4 +4,4 @@ from models.customer_model import CustomerModel
 from models.employee_model import EmployeeModel
 from models.invoice_model import InvoiceModel
 from models.donetask_model import DoneTaskModel
-# from models.newtask_model import NewTaskModel
+from models.newtask_model import NewTaskModel

@@ -8,6 +8,7 @@ import models
 from resources.customer import blp as CustomerBluePrint
 from resources.booking import blp as BookingBluePrint
 from resources.donetask import blp as DoneTaskBluePrint
+from resources.newtask import blp as NewTaskBluePrint
 # from resources.cashier import blp as CashierBluePrint
 from resources.employee import blp as EmployeeBluePrint
 # from resources.invoice import blp as InvoiceBluePrint
@@ -36,10 +37,9 @@ def create_app(db_url=None):
     api.register_blueprint(CustomerBluePrint)
     api.register_blueprint(BookingBluePrint)
     api.register_blueprint(DoneTaskBluePrint)
+    api.register_blueprint(NewTaskBluePrint)
     # api.register_blueprint(CashierBluePrint)
     api.register_blueprint(EmployeeBluePrint)  
     # api.register_blueprint(InvoiceBluePrint)  
    
-   
-
     return app
