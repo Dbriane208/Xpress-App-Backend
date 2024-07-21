@@ -11,3 +11,4 @@ class CustomerModel(db.Model):
 
     bookings = db.relationship("BookingModel",back_populates="customer",lazy="dynamic",cascade="all, delete")
     invoices = db.relationship("InvoiceModel",back_populates="customer",lazy="dynamic",cascade="all, delete")
+    

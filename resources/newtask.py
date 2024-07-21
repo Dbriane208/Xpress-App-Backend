@@ -42,7 +42,7 @@ class NewTasks(MethodView):
 
 @blp.route("/newtask")
 class NewTaskList(MethodView):
-    @blp.response(200,NewTaskSchema())
+    @blp.response(200,NewTaskSchema(many=True))
     def get(self):
         return NewTaskModel.query.all()
 
@@ -50,7 +50,10 @@ class NewTaskList(MethodView):
     @blp.response(201,NewTaskSchema) 
     def post(self,newtask_data):
 
-        logger.info("Received newtask data: %s", newtask_data)
+        existing_task = NewTaskModel.query.filter_by(employee_id=newtask_data["employee_id"]).first()
+
+        if existing_task:
+            abort(400,message="The task with this id is already assigned an employee")
 
         newtask = NewTaskModel(**newtask_data)
 

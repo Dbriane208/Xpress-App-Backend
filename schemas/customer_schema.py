@@ -15,7 +15,12 @@ class CustomerUpdateSchema(Schema):
 
 class CustomerSchema(PlainCustomerSchema):
     bookings = fields.Method("get_bookings", dump_only=True)
+    invoices = fields.Method("get_invoices", dump_only=True)
 
     def get_bookings(self, obj):
         from schemas.booking_schema import PlainBookingSchema
         return PlainBookingSchema(many=True).dump(obj.bookings)
+    
+    def get_invoices(self, obj):
+        from schemas.invoice_schema import PlainInvoiceSchema
+        return PlainInvoiceSchema(many=True).dump(obj.invoices)

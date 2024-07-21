@@ -38,7 +38,7 @@ class Cashier(MethodView):
     
 
 @blp.route("/cashier")
-class CashierLsit(MethodView):
+class CashierList(MethodView):
     @blp.response(200,CashierSchema(many=True))
     def get(self):
         return CashierModel.query.all()

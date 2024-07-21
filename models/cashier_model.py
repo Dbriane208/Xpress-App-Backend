@@ -9,3 +9,4 @@ class CashierModel(db.Model):
     password = db.Column(db.String(80),unique=False,nullable=False)
 
     newtasks = db.relationship("NewTaskModel",back_populates="cashier",lazy="dynamic",cascade="all, delete")
+    invoices = db.relationship("InvoiceModel",back_populates="cashier",lazy="dynamic",cascade="all, delete")

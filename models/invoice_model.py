@@ -7,5 +7,7 @@ class InvoiceModel(db.Model):
     total_amount = db.Column(db.Float(precision=2),nullable=False)
     payment_method = db.Column(db.String(10),nullable=False)
     customer_id = db.Column(db.Integer,db.ForeignKey("customers.id"),unique=False,nullable=True)
+    cashier_id = db.Column(db.Integer,db.ForeignKey("cashiers.id"),unique=False,nullable=True)
 
     customer = db.relationship("CustomerModel",back_populates="invoices")
+    cashier = db.relationship("CashierModel",back_populates="invoices")
