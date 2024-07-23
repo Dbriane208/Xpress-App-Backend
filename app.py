@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_smorest import Api
+from flask_jwt_extended import JWTManager
 
 from db import db
 import models
@@ -18,6 +19,7 @@ from resources.invoice import blp as InvoiceBluePrint
 
 def create_app(db_url=None):
     app = Flask(__name__)
+    
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Xpress REST API"
@@ -27,6 +29,9 @@ def create_app(db_url=None):
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL","sqlite:///data.db")
+    app.config["JWT_SECRET_KEY"] = "xpress-backend-key"
+
+    jwt = JWTManager(app)
 
     db.init_app(app=app)
     api = Api(app=app)

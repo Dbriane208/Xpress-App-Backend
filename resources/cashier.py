@@ -1,10 +1,12 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from sqlalchemy.exc import SQLAlchemyError
+from passlib.hash import pbkdf2_sha256
+from flask_jwt_extended import create_access_token
 
 from db import db
 from models import CashierModel
-from schemas import CashierSchema, CashierUpdateSchema
+from schemas import CashierSchema, CashierUpdateSchema, CashierLoginSchema, PlainNewTaskSchema
 
 blp = Blueprint("Cashiers","cashiers","Operations on cashiers")
 
@@ -36,9 +38,32 @@ class Cashier(MethodView):
 
         return cashier
     
+    
+@blp.route("/cashier/login")
+class  CashierLogin(MethodView):
+    @blp.arguments(CashierLoginSchema)
+    def post(self,cashier_data):
 
-@blp.route("/cashier")
-class CashierList(MethodView):
+        cashier = CashierModel.query.filter(
+            CashierModel.email == cashier_data["email"]
+        ).first()
+
+        if cashier and pbkdf2_sha256.verify(cashier_data["password"],cashier.password):
+            access_token = create_access_token(identity=cashier.id)
+            cashier_data = CashierSchema().dump(cashier)
+            cashier_data['access_token'] = access_token
+            cashier_data['newtasks'] = PlainNewTaskSchema(many=True).dump(cashier.newtasks)
+
+            return {
+                "message":"Login successfully",
+                "data": cashier_data
+                }
+        
+        abort(401,message="Invalid Credentials")
+
+
+@blp.route("/cashier/register")
+class CashierRegister(MethodView):
     @blp.response(200,CashierSchema(many=True))
     def get(self):
         return CashierModel.query.all()
@@ -47,17 +72,16 @@ class CashierList(MethodView):
     @blp.response(201,CashierSchema)
     def post(self,cashier_data):
 
+        if CashierModel.query.filter(CashierModel.email == cashier_data["email"]).first():
+            abort(409,message="A cashier with similar details already exists")
+
+        cashier_data['password'] = pbkdf2_sha256.hash(cashier_data['password'])    
+
         cashier = CashierModel(**cashier_data)
 
         try:
             db.session.add(cashier)
-            db.session.commit()
-        except IntegrityError:
-            abort(
-                400,
-                message="A cashier with similar details already exists"
-            
-            )      
+            db.session.commit()    
 
         except SQLAlchemyError:
             abort(
@@ -65,4 +89,7 @@ class CashierList(MethodView):
                message="An error occurred creating a new cashier" 
             )   
 
-        return cashier    
+        return {
+            "message":"cashier created successfully",
+            "data": cashier
+            } 

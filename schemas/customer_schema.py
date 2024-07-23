@@ -5,13 +5,17 @@ class PlainCustomerSchema(Schema):
     username = fields.Str(required=True)
     email = fields.Str(required=True)
     phone = fields.Str(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=True,load_only=True)
 
 class CustomerUpdateSchema(Schema):
     username = fields.Str()
     email = fields.Str()
     phone = fields.Str()
     password = fields.Str()
+
+class CustomerLoginSchema(Schema):
+    email = fields.Str(required=True)
+    password = fields.Str(required=True, load_only=True)    
 
 class CustomerSchema(PlainCustomerSchema):
     bookings = fields.Method("get_bookings", dump_only=True)

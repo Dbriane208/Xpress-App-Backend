@@ -4,14 +4,18 @@ from schemas.newtask_schema import NewTaskSchema
 
 class PlainEmployeeSchema(Schema):
     id = fields.Int(dump_only=True)
-    name = fields.Str(required=True)
+    name = fields.Str()
     email = fields.Str(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=True,load_only=True)
 
 class EmployeeUpdateSchema(Schema):
     name = fields.Str()
     email = fields.Str()
     password = fields.Str()
+
+class EmployeeLoginSchema(Schema):
+    email = fields.Str(required=True)
+    password = fields.Str(required=True,load_only=True)    
 
 class EmployeeSchema(PlainEmployeeSchema):
     donetasks = fields.List(fields.Nested(TaskDoneSchema(),dump_only=True))

@@ -2,14 +2,18 @@ from marshmallow import fields,Schema
 
 class PlainCashierSchema(Schema):
     id = fields.Str(dump_only=True)
-    username = fields.Str(required=True)
+    username = fields.Str()
     email = fields.Str(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=True,load_only=True)
 
 class CashierUpdateSchema(Schema):
     username = fields.Str()
     email = fields.Str()
     password = fields.Str()
+
+class CashierLoginSchema(Schema):
+    email = fields.Str(required=True)
+    password = fields.Str(required=True,load_only=True)
 
 class CashierSchema(PlainCashierSchema):
     newtasks = fields.Method("get_newtasks",dump_only=True)
