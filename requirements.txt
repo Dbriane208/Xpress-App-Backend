@@ -6,3 +6,4 @@ flask-sqlalchemy
 marshmallow
 Flask-JWT-Extended
 passlib
+flask-migrate

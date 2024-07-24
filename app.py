@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 
 from db import db
 from blocklist import BLOCKLIST
@@ -97,8 +98,7 @@ def create_app(db_url=None):
     db.init_app(app=app)
     api = Api(app=app)
 
-    with app.app_context():
-        db.create_all()
+    migrate = Migrate(app=app,db=db)
 
     api.register_blueprint(CustomerBluePrint)
     api.register_blueprint(BookingBluePrint)
