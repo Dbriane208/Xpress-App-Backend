@@ -2,9 +2,10 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError,IntegrityError
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token,get_jwt_identity, jwt_required, get_jwt
 
 from db import db
+from blocklist import BLOCKLIST
 from models import CustomerModel
 from schemas import CustomerSchema, CustomerUpdateSchema, CustomerLoginSchema
 from schemas.booking_schema import PlainBookingSchema
@@ -14,11 +15,13 @@ blp = Blueprint("Customers", "customers", description="Operations on customers")
 
 @blp.route("/customer/<int:customer_id>")
 class Customer(MethodView):
+    @jwt_required(fresh=True)
     @blp.response(200, CustomerSchema)
     def get(self, customer_id):
         customer = CustomerModel.query.get_or_404(customer_id)
         return customer
     
+    @jwt_required()
     def delete(self, customer_id):
         customer = CustomerModel.query.get_or_404(customer_id)
 
@@ -27,6 +30,7 @@ class Customer(MethodView):
 
         return {"message": "Customer deleted successfully"}
     
+    @jwt_required(fresh=True)
     @blp.arguments(CustomerUpdateSchema)
     @blp.response(200, CustomerSchema)
     def put(self, customer_data, customer_id):
@@ -42,6 +46,7 @@ class Customer(MethodView):
 @blp.route("/customer/login")
 class CustomerLogin(MethodView):
     @blp.arguments(CustomerLoginSchema) 
+    @jwt_required(fresh=True)
     def post(self, customer_data):
         customer = CustomerModel.query.filter(
             CustomerModel.email == customer_data["email"]
@@ -61,9 +66,22 @@ class CustomerLogin(MethodView):
 
         abort(409, message="Invalid Credentials") 
 
+@blp.route("/customer/refresh")
+class CustomerTokenRefresh(MethodView):
+    @jwt_required(fresh=True)
+    def post(self):
+        current_customer = get_jwt_identity()
+        new_token = create_access_token(identity=current_customer,fresh=False)
+        jti = get_jwt()["jti"]
+        BLOCKLIST.add(jti)
+        return {
+            "access_token": new_token
+            }           
+
 @blp.route("/customer/register")
 class CustomerRegister(MethodView):
     @blp.response(200, CustomerSchema(many=True))
+    @jwt_required(fresh=True)
     def get(self):
         return CustomerModel.query.all()
     
@@ -84,10 +102,15 @@ class CustomerRegister(MethodView):
       except SQLAlchemyError:
         abort(500, message="An error occurred creating a new customer")
 
-      return {
-         "message":"Registration successful",
-         "data": customer
-        }
+      return customer
+    
+@blp.route("/customer/logout")
+class CustomerLogout(MethodView):
+   @jwt_required(fresh=True)
+   def post(self):
+      jti = get_jwt()["jti"]
+      BLOCKLIST.add(jti)
+      return {"message": "You successufly logged out"}    
  
 
 
