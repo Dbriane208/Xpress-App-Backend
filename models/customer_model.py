@@ -7,7 +7,7 @@ class CustomerModel(db.Model):
     username = db.Column(db.String(80),unique=False,nullable=False)
     email = db.Column(db.String(50),unique=True,nullable=False)
     phone = db.Column(db.String(13),unique=True,nullable=False)
-    password = db.Column(db.String(50),unique=False,nullable=False)
+    password = db.Column(db.String(256),unique=False,nullable=False)
 
     bookings = db.relationship("BookingModel",back_populates="customer",lazy="dynamic",cascade="all, delete")
     invoices = db.relationship("InvoiceModel",back_populates="customer",lazy="dynamic",cascade="all, delete")

@@ -6,7 +6,7 @@ class EmployeeModel(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(80),unique=False,nullable=False)
     email = db.Column(db.String(50),unique=True,nullable=False)
-    password = db.Column(db.String(50),unique=False,nullable=False)
+    password = db.Column(db.String(256),unique=False,nullable=False)
 
     donetasks = db.relationship("DoneTaskModel",back_populates="employee",lazy="dynamic",cascade="all, delete")
     newtasks = db.relationship("NewTaskModel", back_populates="employee", lazy="dynamic", cascade="all, delete")
