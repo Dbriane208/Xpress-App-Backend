@@ -46,7 +46,6 @@ class Customer(MethodView):
 @blp.route("/customer/login")
 class CustomerLogin(MethodView):
     @blp.arguments(CustomerLoginSchema) 
-    @jwt_required(fresh=True)
     def post(self, customer_data):
         customer = CustomerModel.query.filter(
             CustomerModel.email == customer_data["email"]
